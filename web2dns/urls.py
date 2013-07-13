@@ -1,11 +1,10 @@
 from django.conf.urls import patterns, include, url
-from django.http import HttpResponseRedirect
 
 from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('web2dns.views',
-	url(r'^$', lambda x: HttpResponseRedirect('/accounts/profile/')),
+	url(r'^$', 'index', name='index'),
 	url(r'^ip/', 'ip', name='show-ip'),
 
 	url(r'^update/$', 'update', name='update'),

@@ -2,7 +2,8 @@
 # Create your views here.
 
 from django.contrib.auth import authenticate
-from django.http import Http404
+from django.core.urlresolvers import reverse
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, render, render_to_response
 from django.template import Context, RequestContext, Template
 
@@ -84,6 +85,14 @@ def build_dnsupdaterequest(opts, delete=True):
 
 
 ##############################################################################
+
+def index(Request):
+	if Request.user.is_authenticated():
+		return HttpResponseRedirect(reverse('profile'))
+	else:
+		return HttpResponseRedirect(reverse('login'))
+
+
 
 def ip(Request):
 	env = {}

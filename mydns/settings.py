@@ -8,7 +8,7 @@ DJANGO_ROOT = os.path.dirname(os.path.realpath(django.__file__))
 PROJECT_ROOT = os.path.dirname(os.path.realpath(os.path.join(__file__, '..')))
 
 # SV: Overwrite in local_settings
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # SV: Overwrite in local_settings
@@ -133,6 +133,8 @@ INSTALLED_APPS = [
 
 	'django.contrib.admin',
 	'django.contrib.admindocs',
+
+	'web2dns',
 ]
 
 ADDITIONAL_APPS = []
