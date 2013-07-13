@@ -1,0 +1,5 @@
+*.pyc
+
+init_django.py
+mydns/local_settings.py
+

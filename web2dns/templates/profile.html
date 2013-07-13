@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table border=1>
+	<tr>
+		<th>DNS-Name</th>
+		<th>RR-Type</th>
+		<th>Inhalt</th>
+		<th>Update-Key</th>
+	</tr>
+
+	{% for rro in rrobjects %}
+		<tr>
+			<td colspan=4 height="20px"></td>
+		</tr>
+		<tr>
+			<th>{{ rro }}</th>
+			<td colspan=2>&nbsp;</td>
+				<td>{{ rro.updatekey }}</td>
+		</tr>
+		{% for rr in rro.resourcerecord_set.all %}
+			<tr>
+				<td>&nbsp;</td>
+				<td>{{ rr.type }}</td>
+				<td>{{ rr.content }}</td>
+				<td>&nbsp;</td>
+			</tr>
+		{% endfor %}
+	{% endfor %}
+
+</table>
+
+{% endblock %}

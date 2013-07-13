@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Login</h1>
+
+<div style="margin-left:20px;">
+	{% if form.has_errors %}
+	<p>Benutzername und/oder Passwort stimmen nicht!</p>
+	{% endif %}
+
+	<form method="post" action=".">
+		<table>
+			{% csrf_token %}
+			<tr><td><label for="id_username">Username:</label></td><td>{{ form.username }}</td></tr>
+			<tr><td><label for="id_password">Password:</label></td><td>{{ form.password }}</td></tr>
+		</table>
+
+		<input type="submit" value="login" />
+		<input type="hidden" name="next" value="{{ next }}" />
+	</form>
+</div>
+
+<hr />
+
+<h1>Passwort vergessen?</h1>
+
+<div style="margin-left:20px;">
+	Wenn Du Deinen User und/oder Dein Passwort vergessen hast, dann <a href="/accounts/password_reset/">gibt es hier ein neues</a>!
+</div>
+
+{% endblock %}
+
