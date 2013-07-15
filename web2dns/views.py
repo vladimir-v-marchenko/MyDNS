@@ -109,7 +109,7 @@ def update(Request):
 	url_pass = Request.GET.get('password')
 	url_object = Request.GET.get('hostname')
 	url_rrtype = Request.GET.get('rrtype') or 'A'
-	url_content = Request.GET.get('ip') or Request.GET.get('content')
+	url_content = Request.GET.get('ip') or Request.GET.get('content') or Request.META.get('X-FORWARDED-FOR') or Request.META.get('REMOTE_ADDR')
 
 	url_rrtype = url_rrtype.upper()
 
