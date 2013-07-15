@@ -7,6 +7,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_list_or_404, get_object_or_404, render, render_to_response
 from django.template import Context, RequestContext, Template
 
+import datetime
 import subprocess
 
 from web2dns.models import *
@@ -54,10 +55,12 @@ def build_dnsupdaterequest(opts, delete=True):
 	if type(opts) != dict:
 		return None
 	opts['serverip'] = '89.238.82.158'
+	opts['time'] = datetime.datetime.now().isoformat()
 
 	command_start = 'server %(serverip)s\nzone %(domain)s\n'
 	command_delete = 'update delete %(hostname)s %(rrtype)s\n'
 	command_add = 'update add %(newcontent)s\n'
+	command_add_log = 'update delete %(hostname)s TXT\nupdate add %(hostname)s 60 IN TXT "Last Update: %(time)s"\n'
 	command_send = 'send\nquit\n'
 
 	commands = ''
@@ -75,6 +78,12 @@ def build_dnsupdaterequest(opts, delete=True):
 	if opts.get('hostname') != '-':
 		try:
 			commands += command_add % opts
+		except KeyError:
+			return None
+
+	if opts.get('rrtype') != 'TXT':
+		try:
+			commands += command_add_log % opts
 		except KeyError:
 			return None
 
