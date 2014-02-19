@@ -168,6 +168,13 @@ LOGGING = {
 	}
 }
 
+### MyDNS: Some default settings:
+DNSSERVERIP='127.0.0.1'
+PATH2NSUPDATE='/usr/bin/nsupdate'
+PATH2DNSKEY='/etc/bind/DYNDNS.key'
+UPDATEKEYLENGTH=12
+DYNTTL=60
+
 try:
 	from local_settings import *
 except:

@@ -3,11 +3,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from mydns import settings
+
 from random import choice
 import string
 
 # From http://stackoverflow.com/questions/367586/generating-random-text-strings-of-a-given-pattern
-def GenUpdateKey(length=64, chars=string.letters + string.digits):
+def GenUpdateKey(length=settings.UPDATEKEYLENGTH, chars=string.letters + string.digits):
 	return ''.join([choice(chars) for i in range(length)])
 
 ##############################################################################

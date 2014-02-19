@@ -10,6 +10,8 @@ from django.template import Context, RequestContext, Template
 import datetime
 import subprocess
 
+from mydns import settings
+
 from web2dns.models import *
 
 from contentcheck import contentcheck
@@ -54,13 +56,13 @@ def auth_user_or_userkey_for_rrobject(user, url_user, url_pass, rrobject):
 def build_dnsupdaterequest(opts, delete=True):
 	if type(opts) != dict:
 		return None
-	opts['serverip'] = '89.238.82.158'
+	opts['serverip'] = settings.DNSSERVERIP
 	opts['time'] = datetime.datetime.now().isoformat()
 
 	command_start = 'server %(serverip)s\nzone %(domain)s\n'
 	command_delete = 'update delete %(hostname)s %(rrtype)s\n'
 	command_add = 'update add %(newcontent)s\n'
-	command_add_log = 'update delete %(hostname)s TXT\nupdate add %(hostname)s 60 IN TXT "Last Update: %(time)s"\n'
+	command_add_log = 'update delete %(hostname)s TXT\nupdate add %(hostname)s ' + str(settings.DYNTTL) + ' IN TXT "Last Update: %(time)s"\n'
 	command_send = 'send\nquit\n'
 
 	commands = ''
@@ -160,7 +162,7 @@ def update(Request):
 			opts['newcontent'] = unicode(rr)
 			nsupdate_command = build_dnsupdaterequest(opts)
 
-			proc = subprocess.Popen(['/usr/bin/nsupdate', '-k', '/opt/etc/DYNDNS.key'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			proc = subprocess.Popen([settings.PATH2NSUPDATE, '-k', settings.PATH2DNSKEY], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			output = proc.communicate(input=nsupdate_command)
 			env['textcontent'] = 'New: %s\nOld: %s\nUser: %s, identified by %s' % (rr, old_content, user or url_user, authenticated)
 			if output != ('', ''):

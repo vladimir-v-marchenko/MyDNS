@@ -1,0 +1,54 @@
+Update-URL: http://...//update/?username=<USER>&password=<PASSWORD>&hostname=<HOSTNAME>
+
+Parameter (zur Zeit *müssen* diese angegeben werden):
+- "username": Benutzername
+- "password": Passwort des Benutzers *ODER* Update-Key (ein User, mehrere Hosts, verschiedene Updatekeys)
+- "hostname": FQDN des zu ändernden Eintrags (wird wegfallen, dann alle Host mit diesem Update-Key updaten)
+
+Weitere Parameter:
+- "rrtype" (default: A) - aktuell noch AAAA und TXT
+- "ip" oder "content" (default: X-FORWARDED-FOR oder REMOTE_ADDR)
+
+
+
+
+BIND
+====
+
+key "ddns-key.DYNDNS" {
+    algorithm hmac-sha256;
+    secret "<SECRET-KEY>";
+};
+
+zone "<DOMAIN>" {
+    type master;
+    file "/etc/bind/zones/dynamic/<FILE>";
+    journal "/etc/bind/zones/dynamic/<FILE>.journal";
+    max-journal-size 1000k;
+    update-policy {
+        grant ddns-key.DYNDNS subdomain lusc.net A AAAA CNAME HINFO MX SSHFP TXT;
+    };
+};
+
+
+Key-File - erzeugt mit "ddns-confgen -z <ID>"
+========
+key "ddns-key.DYNDNS" {
+    algorithm hmac-sha256;
+    secret "<SECRET-KEY>";
+};
+
+
+
+
+
+1. "./manage.py syncdb" legt DB und Super-User an
+2. "./manage.py collectstatic" sammelt Daten für Produktivbetrieb
+3. "./manage.py runserver" startet Devel-Server auf localhost:8000
+4. http://localhost:8000/admin/ -> einloggen
+5. Domain anlegen ("User" leer lassen)
+6. RRObject anlegen, Name=Hostname (ohne Domain, Domain und User auswählen, evtl. Updatekey anpassen
+7. Update-URL ausprobieren ;)
+8. Umstellen auf Produktivbetrieb ;-)
+
+
